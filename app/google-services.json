@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "999259530525",
+    "firebase_url": "https://propertyuber.firebaseio.com",
+    "project_id": "propertyuber",
+    "storage_bucket": "propertyuber.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999259530525:android:4574c81edf4ae72945edf4",
+        "android_client_info": {
+          "package_name": "com.example.propertyuber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999259530525-9hdm7hqd4n5mdjrvkj7rg0qgtpq0ikir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.propertyuber",
+            "certificate_hash": "e5f99d4e32f4f7d51efcdb2e3bf2e1dfa1a1778a"
+          }
+        },
+        {
+          "client_id": "999259530525-tvdg33s802fmnu3g44ee5ml4j6v94c1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABYxmjHLFxd6wGpl4_7whOrpCbVpIIVs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999259530525-tvdg33s802fmnu3g44ee5ml4j6v94c1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
