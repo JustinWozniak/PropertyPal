@@ -22,6 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -38,6 +43,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +60,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +68,7 @@ import java.util.Map;
 public class CustomersMapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener, RoutingListener {
 
 
     private GoogleMap mMap;
@@ -117,7 +125,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mLogout = findViewById(R.id.logout);
         mRequest = findViewById(R.id.request);
         mSettings = findViewById(R.id.settings);
-        mHistory = findViewById(R.id.history);
+//        mHistory = findViewById(R.id.history);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +143,11 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             public void onClick(View v) {
 
                 if (requestBol){
+                    for(Polyline line : polylines){
+                        line.remove();
+                    }
+                    polylines.clear();
+
                     endRide();
 
 
@@ -169,15 +182,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             }
         });
 
-        mHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CustomersMapActivity.this, HistoryActivity.class);
-                intent.putExtra("customerOrAgent", "Customers");
-                startActivity(intent);
-                return;
-            }
-        });
+//        mHistory.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(CustomersMapActivity.this, HistoryActivity.class);
+//                intent.putExtra("customerOrAgent", "Customers");
+//                startActivity(intent);
+//                return;
+//            }
+//        });
 
 
 
@@ -313,7 +326,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     mMap.addMarker(new MarkerOptions().position(Agents)
                             .title("Agents Location??")
                             .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                             .snippet("Closest agent"));
 
                     if (distance<100){
@@ -322,11 +335,13 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                         float finalDistance = distance / 1000;
                         mRequest.setText("Agent Found: " + String.valueOf(finalDistance) + " Km Away");
                     }
+                    getRouteToMarker(Agents);
+
 
 
 
                     mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("your agent").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 }
 
             }
@@ -335,6 +350,19 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+    }
+
+    private void getRouteToMarker(LatLng pickupLatLng) {
+
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this)
+                .alternativeRoutes(false)
+                .key("AIzaSyDRMQHpMV2u2cB27aC1q7ejEy74kCb8Y6c")
+                .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), pickupLatLng)
+                .build();
+        routing.execute();
 
     }
 
@@ -366,17 +394,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                         Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mAgentProfileImage);
                     }
 
-                    int ratingSum = 0;
-                    float ratingsTotal = 0;
-                    float ratingsAvg = 0;
-                    for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
-                        ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
-                        ratingsTotal++;
-                    }
-                    if(ratingsTotal!= 0){
-                        ratingsAvg = ratingSum/ratingsTotal;
-                        mRatingBar.setRating(ratingsAvg);
-                    }
                 }
             }
             @Override
@@ -408,8 +425,10 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     private void endRide(){
         requestBol = false;
         geoQuery.removeAllListeners();
-        agentLocationRef.removeEventListener(agentLocationRefListener);
-        tripHasEndedRef.removeEventListener(tripHasEndedRefListener);
+        if (agentLocationRef != null) {
+            agentLocationRef.removeEventListener(agentLocationRefListener);
+            tripHasEndedRef.removeEventListener(tripHasEndedRefListener);
+        }
 
         if (agentFoundID != null){
             DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
@@ -437,20 +456,11 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mAgentName.setText("");
         mAgentPhone.setText("");
         mAgentCar.setText("Destination: --");
-        mAgentProfileImage.setImageResource(R.mipmap.default_user);
+        mAgentProfileImage.setImageResource(R.mipmap.customer);
+
+        erasePolylines();
     }
 
-    /*-------------------------------------------- Map specific functions -----
-    |  Function(s) onMapReady, buildGoogleApiClient, onLocationChanged, onConnected
-    |
-    |  Purpose:  Find and update user's location.
-    |
-    |  Note:
-    |	   The update interval is set to 1000Ms and the accuracy is set to PRIORITY_HIGH_ACCURACY,
-    |      If you're having trouble with battery draining too fast then change these to lower values
-    |
-    |
-    *-------------------------------------------------------------------*/
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -458,6 +468,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
+
+
 
         getJSON("http://192.168.1.113/MyApi/Api.php");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -467,6 +479,13 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mMap.setMyLocationEnabled(true);
     }
 
+
+
+
+
+
+
+
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -474,6 +493,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+
+
 
     }
 
@@ -691,5 +712,60 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         }
 
 
+    }
+
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if(e != null) {
+            Log.e("NEWERROR", String.valueOf(e));
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+        if(polylines != null)   {
+            if(polylines.size()>0) {
+                for (Polyline poly : polylines) {
+                    poly.remove();
+                }
+            }
+        }
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i <route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+//            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_LONG).show();
+        }
+
+    }
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+    private void erasePolylines(){
+        for(Polyline line : polylines){
+            line.remove();
+        }
+        polylines.clear();
     }
 }

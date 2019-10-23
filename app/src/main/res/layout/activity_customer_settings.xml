@@ -15,7 +15,16 @@
         android:layout_height="251dp"
         android:layout_marginBottom="20sp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:src="@mipmap/default_user" />
+        android:src="@mipmap/default_user_foreground" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap image to upload another..."
+        android:layout_gravity="center"
+        android:layout_marginBottom="20sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/name"

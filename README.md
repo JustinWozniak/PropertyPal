@@ -1,8 +1,8 @@
 "# PropertyPal" 
 
-An Uber-type app Ive been working on fpr my Internship.
+An Uber-type app Ive been working on for my Internship.
 
-The idea is to have open houses, where a customer can say they want to take a look, and wichever real estate angent is closest can easily comminicate and meet up with them.
+The idea is to have open houses, where a customer can say they want to take a look, and wichever real estate agent is closest can easily comminicate and meet up with them.
 
 Using the google maps api, written in Java in Android Studio
 

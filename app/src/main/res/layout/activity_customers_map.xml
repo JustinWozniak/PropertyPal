@@ -27,16 +27,18 @@
                 android:layout_weight="1"
                 android:background="@color/cardview_light_background"
                 android:text="logout"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/history"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/cardview_light_background"
-                android:text="history"
-                android:textColor="@color/colorPrimaryDark" />
+<!--            <Button-->
+<!--                android:id="@+id/history"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@color/cardview_light_background"-->
+<!--                android:text="history"-->
+<!--                android:textColor="@color/colorPrimaryDark"-->
+<!--                android:textSize="24sp" />-->
 
             <Button
                 android:id="@+id/settings"
@@ -45,7 +47,8 @@
                 android:layout_weight="1"
                 android:background="@color/cardview_light_background"
                 android:text="Settings"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,13 +104,6 @@
                     android:id="@+id/agentCar"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
-<!--                <RatingBar-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:id="@+id/ratingBar"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:numStars="5"-->
-<!--                    android:stepSize="0.1"/>-->
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -115,20 +111,17 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioGroup"
-                android:orientation="horizontal"/>
+
 
             <Button
                 android:id="@+id/request"
                 android:layout_width="match_parent"
-                android:layout_height="119dp"
+                android:layout_height="95dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cardview_light_background"
                 android:text="Find an Agent"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
         </LinearLayout>
     </LinearLayout>
 

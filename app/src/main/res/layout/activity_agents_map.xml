@@ -19,15 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:background="@color/colorAccent"
-                android:text="Settings"
-                android:textColor="@color/colorPrimaryDark" />
 
             <Button
                 android:id="@+id/logout"
@@ -36,23 +27,36 @@
                 android:layout_weight="1"
                 android:background="@color/colorAccent"
                 android:text="logout"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
-            <Switch
-                android:id="@+id/workingSwitch"
+            <Button
+                android:id="@+id/settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10sp"
-                android:text="W" />
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:text="Settings"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+
+
+
 
         </LinearLayout>
-        <!-- <Switch
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Working"
-             android:layout_margin="10sp"
-             android:id="@+id/workingSwitch"/> -->
-     </LinearLayout>
+
+        <Switch
+            android:id="@+id/workingSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25sp"
+            android:background="#ffffff"
+            android:text="Available?"
+            android:thumbTint="@color/colorSwitch"
+            android:trackTint="@color/colorSwitch" />
+    </LinearLayout>
 
 
 
@@ -63,7 +67,7 @@
          android:layout_gravity="bottom"
          android:orientation="vertical"
          android:background="@android:color/white"
-
+         android:visibility="gone"
          android:elevation="1dp"
          android:translationZ="1dp">
          <LinearLayout
@@ -74,7 +78,7 @@
                  android:layout_width="100sp"
                  android:layout_height="100sp"
                  android:id="@+id/customerProfileImage"
-                 android:src="@mipmap/default_user"
+                 android:src="@mipmap/default_user_foreground"
                  android:padding="20sp"/>
              <LinearLayout
                  android:layout_width="wrap_content"
@@ -101,11 +105,14 @@
                      android:paddingTop="20sp"/>
              </LinearLayout>
          </LinearLayout>
+
          <Button
+             android:id="@+id/rideStatus"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:background="@color/cardview_light_background"
              android:text="picked customer"
-             android:id="@+id/rideStatus"/>
+             android:textColor="@color/colorPrimaryDark" />
 
 
      </LinearLayout>

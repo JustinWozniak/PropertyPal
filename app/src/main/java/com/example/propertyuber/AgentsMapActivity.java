@@ -23,6 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,14 +43,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.okhttp.Route;
-import com.squareup.okhttp.internal.http.RouteException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,11 +66,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, RoutingListener {
+
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
+    Location mLastLocation = new Location("dummyprovider");
     LocationRequest mLocationRequest;
 
     private Button mLogout, mSettings, mRideStatus;
@@ -93,6 +98,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agents_map);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -219,8 +225,8 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                     }
                     pickupLatLng = new LatLng(locationLat, locationLng);
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("Customers current location").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    getRouteToMarker(pickupLatLng);
                 }
             }
 
@@ -228,6 +234,19 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    private void getRouteToMarker(LatLng pickupLatLng) {
+
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this)
+                .alternativeRoutes(false)
+                .key("AIzaSyDRMQHpMV2u2cB27aC1q7ejEy74kCb8Y6c")
+                .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), pickupLatLng)
+                .build();
+        routing.execute();
+
     }
 
 
@@ -317,12 +336,18 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         }
         if (assignedCustomerPickupLocationRefListener != null) {
             assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+
+            for (Polyline line : polylines) {
+                line.remove();
+            }
+            polylines.clear();
         }
         mCustomerInfo.setVisibility(View.GONE);
         mCustomerName.setText("");
         mCustomerPhone.setText("");
         mCustomerDestination.setText("Destination: --");
-        mCustomerProfileImage.setImageResource(R.mipmap.default_user);
+        mCustomerProfileImage.setImageResource(R.mipmap.customer);
+
     }
 
     private void recordRide() {
@@ -368,6 +393,8 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -383,15 +410,16 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onLocationChanged(Location location) {
         if (getApplicationContext() != null) {
-            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("Customers current location").icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            LatLng starter = new LatLng(-23.818045, 136.605767);
+            pickupMarker = mMap.addMarker(new MarkerOptions().position(starter));
             if (!customerId.equals("")) {
 //                rideDistance += mLastLocation.distanceTo(location)/1000;
+                pickupMarker.remove();
             }
 
             mLastLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 //            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -607,5 +635,64 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         }
 
 
+    }
+
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if (e != null) {
+            Log.e("NEWERROR", String.valueOf(e));
+//            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//        }else {
+//            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+        if (polylines != null) {
+            if (polylines.size() > 0) {
+                for (Polyline poly : polylines) {
+                    poly.remove();
+                }
+            }
+        }
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i < route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+//            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    private void erasePolylines() {
+        for (Polyline line : polylines) {
+            line.remove();
+        }
+        polylines.clear();
     }
 }
