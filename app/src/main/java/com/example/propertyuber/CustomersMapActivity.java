@@ -76,7 +76,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button mLogout, mRequest, mSettings, mHistory;
+    private Button mLogout, mRequest, mSettings;
 
     private LatLng pickupLocation;
 
@@ -125,7 +125,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mLogout = findViewById(R.id.logout);
         mRequest = findViewById(R.id.request);
         mSettings = findViewById(R.id.settings);
-//        mHistory = findViewById(R.id.history);
+
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,10 +143,10 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             public void onClick(View v) {
 
                 if (requestBol){
-                    for(Polyline line : polylines){
-                        line.remove();
-                    }
-                    polylines.clear();
+//                    for(Polyline line : polylines){
+//                        line.remove();
+//                    }
+//                    polylines.clear();
 
                     endRide();
 
@@ -182,15 +182,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             }
         });
 
-//        mHistory.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(CustomersMapActivity.this, HistoryActivity.class);
-//                intent.putExtra("customerOrAgent", "Customers");
-//                startActivity(intent);
-//                return;
-//            }
-//        });
 
 
 
@@ -328,14 +319,14 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                             .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                             .snippet("Closest agent"));
-
+                    getRouteToMarker(Agents);
                     if (distance<100){
                         mRequest.setText("Agent's Here!!!");
                     }else{
                         float finalDistance = distance / 1000;
                         mRequest.setText("Agent Found: " + String.valueOf(finalDistance) + " Km Away");
                     }
-                    getRouteToMarker(Agents);
+
 
 
 
@@ -458,7 +449,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mAgentCar.setText("Destination: --");
         mAgentProfileImage.setImageResource(R.mipmap.customer);
 
-        erasePolylines();
+//        erasePolylines();
     }
 
     @Override

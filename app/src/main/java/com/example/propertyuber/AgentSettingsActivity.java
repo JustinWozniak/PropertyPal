@@ -119,8 +119,8 @@ public class AgentSettingsActivity extends AppCompatActivity {
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
                     }
-                    if(map.get("car")!=null){
-                        mCar = map.get("car").toString();
+                    if(map.get("vehicle")!=null){
+                        mCar = map.get("vehicle").toString();
                         mCarField.setText(mCar);
                     }
 

@@ -50,13 +50,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -148,7 +145,6 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
                         break;
                     case 2:
-                        recordRide();
                         endRide();
                         break;
                 }
@@ -312,6 +308,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -350,33 +347,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    private void recordRide() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(userId).child("history");
-        DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
-        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
-        String requestId = historyRef.push().getKey();
-        agentRef.child(requestId).setValue(true);
-        customerRef.child(requestId).setValue(true);
 
-        HashMap map = new HashMap();
-        map.put("agent", userId);
-        map.put("customer", customerId);
-        map.put("rating", 0);
-        map.put("timestamp", getCurrentTimestamp());
-        map.put("destination", destination);
-        map.put("location/from/lat", pickupLatLng.latitude);
-        map.put("location/from/lng", pickupLatLng.longitude);
-        map.put("location/to/lat", destinationLatLng.latitude);
-        map.put("location/to/lng", destinationLatLng.longitude);
-        map.put("distance", rideDistance);
-        historyRef.child(requestId).updateChildren(map);
-    }
-
-    private Long getCurrentTimestamp() {
-        Long timestamp = System.currentTimeMillis() / 1000;
-        return timestamp;
-    }
 
 
     @Override
@@ -456,6 +427,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        disconnectAgent();
     }
 
     private void connectAgent() {
@@ -524,7 +496,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                 try {
                     loadIntoMaps(s);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "NO DATABASE LOADED", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -559,6 +531,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                     //finally returning the read string
                     return sb.toString().trim();
                 } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "NO DATABASE LOADED", Toast.LENGTH_LONG).show();
                     return null;
                 }
 
