@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,51 +19,51 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AgentSignupActivity extends AppCompatActivity {
+public class CustomerSignupActivity extends AppCompatActivity {
 
-    private EditText agentName;
-    private EditText agentEmail;
-    private EditText agentCar;
-    private EditText agentPhoneNumber;
-    private EditText agentPassword1;
-    private EditText agentPassword2;
+    private EditText customerName;
+    private EditText customerEmail;
+    private EditText customerCar;
+    private EditText customerPhoneNumber;
+    private EditText customerPassword1;
+    private EditText customerPassword2;
 
-    private TextView agentSubmitSignup;
+    private TextView customerSubmitSignup;
 
     private ProgressDialog loadingBar;
 
     private FirebaseAuth mAuth;
 
-    private DatabaseReference agentDatabaseRef;
+    private DatabaseReference customerDatabaseRef;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agent_signup);
+        setContentView(R.layout.activity_customer_signup);
 
-        agentName = findViewById(R.id.agentName);
-        agentEmail = findViewById(R.id.agentEmail);
-        agentCar = findViewById(R.id.agentVehicle);
-        agentPhoneNumber = findViewById(R.id.agentPhone);
-        agentPassword1 = findViewById(R.id.agentPassword1);
-        agentPassword2 = findViewById(R.id.agentPassword2);
-        agentSubmitSignup = findViewById(R.id.agentSubmitSignupButton);
+        customerName = findViewById(R.id.customerName);
+        customerEmail = findViewById(R.id.customerEmail);
+        customerCar = findViewById(R.id.customerVehicle);
+        customerPhoneNumber = findViewById(R.id.customerPhone);
+        customerPassword1 = findViewById(R.id.customerPassword1);
+        customerPassword2 = findViewById(R.id.customerPassword2);
+        customerSubmitSignup = findViewById(R.id.customerSubmitSignupButton);
 
         loadingBar = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
 
 
-        agentSubmitSignup.setOnClickListener(new View.OnClickListener() {
+        customerSubmitSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = agentName.getText().toString();
-                String email = agentEmail.getText().toString();
-                String car = agentCar.getText().toString();
-                String phone = agentPhoneNumber.getText().toString();
-                String pass1 = agentPassword1.getText().toString();
-                String pass2 = agentPassword2.getText().toString();
+                String name = customerName.getText().toString();
+                String email = customerEmail.getText().toString();
+                String car = customerCar.getText().toString();
+                String phone = customerPhoneNumber.getText().toString();
+                String pass1 = customerPassword1.getText().toString();
+                String pass2 = customerPassword2.getText().toString();
 
                 signupCustomer(name, email, car, phone, pass1, pass2);
             }
@@ -102,7 +101,7 @@ public class AgentSignupActivity extends AppCompatActivity {
         }
 
         else {
-            loadingBar.setTitle("Agent Registration...");
+            loadingBar.setTitle("customer Registration...");
             loadingBar.setMessage("Please wait, we are entering your data...");
             loadingBar.show();
 
@@ -113,53 +112,53 @@ public class AgentSignupActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
 
                                 String user_id = mAuth.getCurrentUser().getUid();
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("Agents")
+                                        .child("customers")
                                         .child(user_id)
                                         .child("name");
-                                agentDatabaseRef.setValue(name);
+                                customerDatabaseRef.setValue(name);
 
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("Agents")
+                                        .child("customers")
                                         .child(user_id)
                                         .child("email");
-                                agentDatabaseRef.setValue(email);
+                                customerDatabaseRef.setValue(email);
 
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("Agents")
+                                        .child("customers")
                                         .child(user_id)
                                         .child("car");
-                                agentDatabaseRef.setValue(car);
+                                customerDatabaseRef.setValue(car);
 
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("Agents")
+                                        .child("customers")
                                         .child(user_id)
                                         .child("phone");
-                                agentDatabaseRef.setValue(phone);
+                                customerDatabaseRef.setValue(phone);
 
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("Agents")
+                                        .child("customers")
                                         .child(user_id)
                                         .child("password");
-                                agentDatabaseRef.setValue(pass1);
+                                customerDatabaseRef.setValue(pass1);
 
-                                Intent AgentIntent = new Intent(AgentSignupActivity.this, AgentsMapActivity.class);
-                                startActivity(AgentIntent);
+                                Intent customerIntent = new Intent(CustomerSignupActivity.this, CustomersMapActivity.class);
+                                startActivity(customerIntent);
 
-                                Toast.makeText(AgentSignupActivity.this, "Agent registration successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerSignupActivity.this, "customer registration successful", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
                             } else {
-                                Toast.makeText(AgentSignupActivity.this, "Registration unsuccessful, please try again..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerSignupActivity.this, "Registration unsuccessful, please try again..", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
                             }
                         }

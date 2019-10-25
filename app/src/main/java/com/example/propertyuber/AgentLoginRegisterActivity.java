@@ -30,7 +30,7 @@ public class AgentLoginRegisterActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent LoginUpAgentIntent = new Intent(AgentLoginRegisterActivity.this, AgentLoginActivity.class);
+                Intent LoginUpAgentIntent = new Intent(AgentLoginRegisterActivity.this, AgentSigninActivity.class);
                 startActivity(LoginUpAgentIntent);
             }
         });

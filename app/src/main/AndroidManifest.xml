@@ -22,7 +22,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".AgentLoginActivity"></activity>
+        <activity android:name=".CustomerSigninActivity"></activity>
+        <activity android:name=".CustomerSignupActivity" />
+        <activity android:name=".AgentSigninActivity" />
         <activity android:name=".AgentSignupActivity" />
         <activity android:name=".AgentLoginRegisterActivity" />
         <activity android:name=".HistoryActivity" />
