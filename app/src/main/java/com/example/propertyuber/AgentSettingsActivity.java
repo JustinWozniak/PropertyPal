@@ -64,16 +64,16 @@ public class AgentSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_agent_settings);
 
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
-        mCarField = (EditText) findViewById(R.id.car);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
+        mCarField = findViewById(R.id.car);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = findViewById(R.id.profileImage);
 
 
 
-        mBack = (Button) findViewById(R.id.back);
-        mConfirm = (Button) findViewById(R.id.confirm);
+        mBack = findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
 
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
@@ -119,8 +119,8 @@ public class AgentSettingsActivity extends AppCompatActivity {
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
                     }
-                    if(map.get("vehicle")!=null){
-                        mCar = map.get("vehicle").toString();
+                    if(map.get("car")!=null){
+                        mCar = map.get("car").toString();
                         mCarField.setText(mCar);
                     }
 

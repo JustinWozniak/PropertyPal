@@ -141,7 +141,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (destinationLatLng.latitude != 0.0 && destinationLatLng.longitude != 0.0) {
 
                         }
-                        mRideStatus.setText("Trip complete");
+                        mRideStatus.setText("Trip complete?");
 
                         break;
                     case 2:
@@ -220,8 +220,8 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
                     pickupLatLng = new LatLng(locationLat, locationLng);
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("Customers current location").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("Customers current location") .icon(BitmapDescriptorFactory
+                            .fromResource(R.drawable.customer)));
                     getRouteToMarker(pickupLatLng);
                 }
             }
@@ -382,7 +382,8 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onLocationChanged(Location location) {
         if (getApplicationContext() != null) {
             LatLng starter = new LatLng(-23.818045, 136.605767);
-            pickupMarker = mMap.addMarker(new MarkerOptions().position(starter));
+            pickupMarker = mMap.addMarker(new MarkerOptions().position(starter) .icon(BitmapDescriptorFactory
+                    .fromResource(R.drawable.customer)));
             if (!customerId.equals("")) {
 //                rideDistance += mLastLocation.distanceTo(location)/1000;
                 pickupMarker.remove();

@@ -164,8 +164,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Customers Location").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Customers Location")  .icon(BitmapDescriptorFactory
+                                    .fromResource(R.drawable.customer)));
 
                     mRequest.setText("Getting your Agent....");
 
@@ -315,9 +315,9 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
                     LatLng Agents = new LatLng(agentLatLng.latitude, agentLatLng.longitude);
                     mMap.addMarker(new MarkerOptions().position(Agents)
-                            .title("Agents Location??")
+                            .title("Agents Location")
                             .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                    .fromResource(R.drawable.agent))
                             .snippet("Closest agent"));
                     getRouteToMarker(Agents);
                     if (distance<100){
@@ -331,8 +331,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
 
 
-                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("your agent").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("Your Agent") .icon(BitmapDescriptorFactory
+                            .fromResource(R.drawable.agent)));
                 }
 
             }
@@ -403,6 +403,9 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                 if(dataSnapshot.exists()){
 
                 }else{
+                    if (polylines != null) {
+                        erasePolylines();
+                    }
                     endRide();
                 }
             }
@@ -448,8 +451,12 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mAgentPhone.setText("");
         mAgentCar.setText("Destination: --");
         mAgentProfileImage.setImageResource(R.mipmap.customer);
-
-//        erasePolylines();
+        if (mAgentMarker != null) {
+            mAgentMarker.remove();
+        }
+        if (polylines != null) {
+            erasePolylines();
+        }
     }
 
     @Override

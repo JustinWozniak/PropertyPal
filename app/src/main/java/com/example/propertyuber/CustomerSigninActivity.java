@@ -21,7 +21,6 @@ public class CustomerSigninActivity extends AppCompatActivity {
 
     private EditText customerSigninEmail;
     private EditText customerSigninPass1;
-    private EditText customerSigninPass2;
     private TextView customerSigninProceedButton;
     private ProgressDialog loadingBar;
     private FirebaseAuth mAuth;
@@ -35,7 +34,6 @@ public class CustomerSigninActivity extends AppCompatActivity {
 
         customerSigninEmail = findViewById(R.id.customerSigninEmail);
         customerSigninPass1 = findViewById(R.id.customerSigninPass1);
-        customerSigninPass2 = findViewById(R.id.customerSigninPass2);
         customerSigninProceedButton = findViewById(R.id.customerSigninProceed);
 
         loadingBar = new ProgressDialog(this);
@@ -46,13 +44,12 @@ public class CustomerSigninActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = customerSigninEmail.getText().toString();
                 String password = customerSigninPass1.getText().toString();
-                String password2 = customerSigninPass2.getText().toString();
-                signinCustomer(email, password, password2);
+                signinCustomer(email, password);
             }
         });
     }
 
-    private void signinCustomer(String email, String password, String password2) {
+    private void signinCustomer(String email, String password) {
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(CustomerSigninActivity.this, "Please enter an Email Address", Toast.LENGTH_SHORT).show();
@@ -61,13 +58,9 @@ public class CustomerSigninActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(CustomerSigninActivity.this, "Please enter a password", Toast.LENGTH_SHORT).show();
 
-        }
-        if (TextUtils.isEmpty(password2)) {
-            Toast.makeText(CustomerSigninActivity.this, "Please enter second password", Toast.LENGTH_SHORT).show();
-
 
         } else {
-            loadingBar.setTitle("customer SignIn...");
+            loadingBar.setTitle("Customer Sign In...");
             loadingBar.setMessage("Please wait, we are checking your credentials...");
             loadingBar.show();
 

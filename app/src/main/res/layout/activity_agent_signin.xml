@@ -43,7 +43,7 @@
 
     <EditText
         android:id="@+id/agentSigninEmail"
-        android:layout_width="295dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
         android:layout_marginLeft="62dp"
@@ -54,6 +54,7 @@
         android:gravity="center_horizontal"
         android:hint="Email Address"
         android:inputType="text"
+        android:text="agent@agent.com"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/agentSigninPass1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,10 +63,11 @@
 
     <EditText
         android:id="@+id/agentSigninPass1"
-        android:layout_width="295dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
         android:layout_marginLeft="62dp"
+        android:layout_marginTop="14dp"
         android:layout_marginEnd="54dp"
         android:layout_marginRight="54dp"
         android:layout_marginBottom="60dp"
@@ -73,30 +75,13 @@
         android:gravity="center_horizontal"
         android:hint="Password"
         android:inputType="textPassword"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/agentSigninPass2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/agentSigninEmail" />
-
-    <EditText
-        android:id="@+id/agentSigninPass2"
-        android:layout_width="295dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginRight="54dp"
-        android:ems="10"
-        android:gravity="center_horizontal"
-        android:hint="Password Again"
-        android:inputType="textPassword"
+        android:text="123456"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/agentSigninProceed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/agentSigninEmail"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintTop_toBottomOf="@+id/agentSigninEmail" />
+
 
     <TextView
         android:id="@+id/agentSigninProceed"
@@ -110,6 +95,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/agentSigninPass2" />
+        app:layout_constraintTop_toBottomOf="@id/textView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -73,7 +73,7 @@
         android:fontFamily="@font/audiowide"
         android:text="Welcome"
         android:textColor="@color/cardview_light_background"
-        android:textSize="65sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/welcome_agent_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -36,6 +36,8 @@ public class CustomerSignupActivity extends AppCompatActivity {
 
     private DatabaseReference customerDatabaseRef;
 
+    private String profileImageUrl = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("customers")
+                                        .child("Customers")
                                         .child(user_id)
                                         .child("name");
                                 customerDatabaseRef.setValue(name);
@@ -123,7 +125,7 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("customers")
+                                        .child("Customers")
                                         .child(user_id)
                                         .child("email");
                                 customerDatabaseRef.setValue(email);
@@ -131,7 +133,7 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("customers")
+                                        .child("Customers")
                                         .child(user_id)
                                         .child("car");
                                 customerDatabaseRef.setValue(car);
@@ -139,7 +141,7 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("customers")
+                                        .child("Customers")
                                         .child(user_id)
                                         .child("phone");
                                 customerDatabaseRef.setValue(phone);
@@ -147,10 +149,18 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()
                                         .child("Users")
-                                        .child("customers")
+                                        .child("Customers")
                                         .child(user_id)
                                         .child("password");
                                 customerDatabaseRef.setValue(pass1);
+
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
+                                        .getReference()
+                                        .child("Users")
+                                        .child("Customers")
+                                        .child(user_id)
+                                        .child("profileImageUrl");
+                                customerDatabaseRef.setValue(profileImageUrl);
 
                                 Intent customerIntent = new Intent(CustomerSignupActivity.this, CustomersMapActivity.class);
                                 startActivity(customerIntent);

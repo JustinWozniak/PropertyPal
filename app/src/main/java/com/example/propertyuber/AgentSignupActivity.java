@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,9 @@ public class AgentSignupActivity extends AppCompatActivity {
 
     private DatabaseReference agentDatabaseRef;
 
+    private String profileImageUrl = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +69,19 @@ public class AgentSignupActivity extends AppCompatActivity {
                 String phone = agentPhoneNumber.getText().toString();
                 String pass1 = agentPassword1.getText().toString();
                 String pass2 = agentPassword2.getText().toString();
+                String passFinal = pass1;
 
-                signupCustomer(name, email, car, phone, pass1, pass2);
+                if (pass1 != pass2) {
+                    passFinal = "NOPE";
+                }
+
+                signupCustomer(name, email, car, phone, pass1, pass2, passFinal);
             }
         });
     }
 
 
-    private void signupCustomer(final String name, final String email, final String car, final String phone, final String pass1, String pass2) {
+    private void signupCustomer(final String name, final String email, final String car, final String phone, final String pass1, String pass2, String passFinal) {
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "Please enter your full name", Toast.LENGTH_SHORT).show();
@@ -100,6 +109,8 @@ public class AgentSignupActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter second password", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
 
         else {
             loadingBar.setTitle("Agent Registration...");
@@ -152,6 +163,14 @@ public class AgentSignupActivity extends AppCompatActivity {
                                         .child(user_id)
                                         .child("password");
                                 agentDatabaseRef.setValue(pass1);
+
+                                agentDatabaseRef = FirebaseDatabase.getInstance()
+                                        .getReference()
+                                        .child("Users")
+                                        .child("Agents")
+                                        .child(user_id)
+                                        .child("profileImageUrl");
+                                agentDatabaseRef.setValue(profileImageUrl);
 
                                 Intent AgentIntent = new Intent(AgentSignupActivity.this, AgentsMapActivity.class);
                                 startActivity(AgentIntent);

@@ -21,7 +21,6 @@ public class AgentSigninActivity extends AppCompatActivity {
 
     private EditText agentSigninEmail;
     private EditText agentSigninPass1;
-    private EditText agentSigninPass2;
     private TextView agentSigninProceedButton;
     private ProgressDialog loadingBar;
     private FirebaseAuth mAuth;
@@ -35,7 +34,6 @@ public class AgentSigninActivity extends AppCompatActivity {
 
         agentSigninEmail = findViewById(R.id.agentSigninEmail);
         agentSigninPass1 = findViewById(R.id.agentSigninPass1);
-        agentSigninPass2 = findViewById(R.id.agentSigninPass2);
         agentSigninProceedButton = findViewById(R.id.agentSigninProceed);
 
         loadingBar = new ProgressDialog(this);
@@ -46,13 +44,12 @@ public class AgentSigninActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = agentSigninEmail.getText().toString();
                 String password = agentSigninPass1.getText().toString();
-                String password2 = agentSigninPass2.getText().toString();
-                signinCustomer(email, password, password2);
+                signinCustomer(email, password);
             }
         });
     }
 
-    private void signinCustomer(String email, String password, String password2) {
+    private void signinCustomer(String email, String password) {
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(AgentSigninActivity.this, "Please enter an Email Address", Toast.LENGTH_SHORT).show();
@@ -61,14 +58,10 @@ public class AgentSigninActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(AgentSigninActivity.this, "Please enter a password", Toast.LENGTH_SHORT).show();
 
-        }
-        if (TextUtils.isEmpty(password2)) {
-                Toast.makeText(AgentSigninActivity.this, "Please enter second password", Toast.LENGTH_SHORT).show();
-
 
             } else {
-            loadingBar.setTitle("Agent SignIn...");
-            loadingBar.setMessage("Please wait, we are checking your credentials...");
+            loadingBar.setTitle("Agent Sign In...");
+            loadingBar.setMessage("Please Wait, We Are Checking Your Credentials...");
             loadingBar.show();
 
             mAuth.signInWithEmailAndPassword(email, password)
@@ -79,11 +72,11 @@ public class AgentSigninActivity extends AppCompatActivity {
 
                                 Intent CustomerIntent = new Intent(AgentSigninActivity.this, AgentsMapActivity.class);
                                 startActivity(CustomerIntent);
-                                Toast.makeText(AgentSigninActivity.this, "Agent Login successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AgentSigninActivity.this, "Agent Sign In Successful", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
                             } else {
-                                Toast.makeText(AgentSigninActivity.this, "SignIn unsuccessful, please check email/password and try again..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AgentSigninActivity.this, "Sign In Unsuccessful, Please Check Email/Password..", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
                             }
                         }
