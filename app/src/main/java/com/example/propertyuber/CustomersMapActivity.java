@@ -647,81 +647,48 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         String[] latittudes = new String[addressArray.length()];
         String[] longitutes = new String[addressArray.length()];
         String[] urlString = new String[addressArray.length()];
-        final String finalUrl = urlString.toString();
+        final String[] propertyInformation = new String[addressArray.length()];
+
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
 
-            //getting json object from the json array
             JSONObject obj = addressArray.getJSONObject(i);
 
-            //getting the markerNames from the json object and putting it inside string array
             markerNames[i] = obj.getString("name");
-
-        }
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            //getting json object from the json array
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            //getting the address from the json object and putting it inside string array
             addresses[i] = obj.getString("address");
-
-        }
-
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            //getting json object from the json array
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            //getting the address from the json object and putting it inside string array
             latittudes[i] = obj.getString("lat");
-
-        }
-
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            //getting json object from the json array
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            //getting the address from the json object and putting it inside string array
             longitutes[i] = obj.getString("lng");
-
-        }
-
-
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            //getting json object from the json array
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            //getting the address from the json object and putting it inside string array
+            propertyInformation[i] = obj.getString("information");
+            Log.e("INFO", propertyInformation[i]);
             urlString[i] = obj.getString("urlString");
+
+
+            JSONObject jsonObj = addressArray.getJSONObject(i);
+            double finalLat = Double.valueOf(jsonObj.getString("lat"));
+            double finalLng = Double.valueOf(jsonObj.getString("lng"));
+            mMap.addMarker(new MarkerOptions()
+                    .title(jsonObj.getString("address"))
+                    .snippet(propertyInformation[i])
+                    .position(new LatLng(finalLat,
+                            finalLng)
+                    ));
+                Log.e("SNIP",propertyInformation[i]);
+
             final String anotherUrl = urlString[i].toString();
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(anotherUrl));
                     startActivity(browserIntent);
+
+                    marker.setSnippet(propertyInformation.toString());
                 }
             });
-        }
-
-
-//        JSONArray jsonArray = new JSONArray(json);
-        for (int i = 0; i < addressArray.length(); i++) {
-            // Create a marker for each city in the JSON data.
-            JSONObject jsonObj = addressArray.getJSONObject(i);
-
-            double finalLat = Double.valueOf(jsonObj.getString("lat"));
-            double finalLng = Double.valueOf(jsonObj.getString("lng"));
-
-            mMap.addMarker(new MarkerOptions()
-                    .title(jsonObj.getString("address"))
-                    .position(new LatLng(finalLat,
-                            finalLng)
-                    ));
 
         }
+
+
+
     }
 
     private List<Polyline> polylines;
