@@ -35,7 +35,7 @@
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/customWindowImage"
+            android:id="@+id/agentsCustomWindowImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@drawable/pplogo" />

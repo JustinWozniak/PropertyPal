@@ -466,10 +466,11 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
+        mMap.setInfoWindowAdapter(new AgentsCustomInfoWindowAdapter(CustomersMapActivity.this));
+        
 
-
-
-        getJSON("http://192.168.1.113/MyApi/Api.php");
+//        getJSON("http://192.168.1.113/MyApi/Api.php");
+        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }

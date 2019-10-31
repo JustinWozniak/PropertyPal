@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -58,7 +57,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -358,14 +356,15 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
 
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(AgentsMapActivity.this));
+        mMap.setInfoWindowAdapter(new AgentsCustomInfoWindowAdapter(AgentsMapActivity.this));
 
 
 
 
 
 
-        getJSON("http://192.168.1.113/MyApi/Api.php");
+//        getJSON("http://192.168.0.17/MyApi/Api.php");
+        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }

@@ -9,24 +9,24 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final View mWindow;
     private Context mContext;
     private ImageView openHouseImage;
 
-    public CustomInfoWindowAdapter(Context context) {
+    public CustomersCustomInfoWindowAdapter(Context context) {
         mContext = context;
-        mWindow = LayoutInflater.from(context).inflate(R.layout.custom_layout_window, null);
+        mWindow = LayoutInflater.from(context).inflate(R.layout.customers_custom_layout_window, null);
 
 
     }
 
-    private void renderWindowText(Marker marker, View view){
+    private void renderWindowText(Marker marker, View view) {
 
         String title = marker.getTitle();
         TextView tvTitle = view.findViewById(R.id.title);
-        openHouseImage= view.findViewById(R.id.customWindowImage);
+        openHouseImage = view.findViewById(R.id.customersCustomWindowImage);
         openHouseImage.setImageResource(R.drawable.pplogo);
         tvTitle.setText(title);
 
@@ -35,7 +35,7 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView tvSnippet = view.findViewById(R.id.snippet);
 
 
-            tvSnippet.setText(snippet);
+        tvSnippet.setText(snippet);
 
     }
 
