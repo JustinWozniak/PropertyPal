@@ -3,6 +3,7 @@ package com.example.propertyuber;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,10 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
     private final View mWindow;
     private Context mContext;
     private ImageView openHouseImage;
+    private ImageView openHouseImage1;
+    private ImageView openHouseImage2;
+    private ImageView openHouseImage3;
+    private Button openHouseButton;
 
     public AgentsCustomInfoWindowAdapter(Context context) {
         mContext = context;
@@ -22,20 +27,34 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
     }
 
-    private void renderWindowText(Marker marker, View view){
+    private void renderWindowText(Marker marker, View view) {
 
         String title = marker.getTitle();
         TextView tvTitle = view.findViewById(R.id.title);
-        openHouseImage= view.findViewById(R.id.agentsCustomWindowImage);
-        openHouseImage.setImageResource(R.drawable.pplogo);
-        tvTitle.setText(title);
+        openHouseImage1 = view.findViewById(R.id.agentsCustomWindowImage1);
+        openHouseImage1.setImageResource(R.drawable.pplogo);
+        openHouseImage2 = view.findViewById(R.id.agentsCustomWindowImage2);
+        openHouseImage2.setImageResource(R.drawable.pplogo);
+        openHouseImage3 = view.findViewById(R.id.agentsCustomWindowImage3);
+        openHouseImage3.setImageResource(R.drawable.pplogo);
+
+
+
+
+
+
+        tvTitle.setText("Open House!");
 
 
         String snippet = marker.getSnippet();
         TextView tvSnippet = view.findViewById(R.id.snippet);
 
 
-            tvSnippet.setText(snippet);
+        tvSnippet.setText(title);
+
+
+        openHouseButton = view.findViewById(R.id.agentsOpenHouseButton);
+
 
     }
 

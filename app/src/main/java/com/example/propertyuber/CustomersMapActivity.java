@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -108,19 +109,19 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(CustomersMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }else{
+        } else {
             mapFragment.getMapAsync(this);
         }
 
-        destinationLatLng = new LatLng(0.0,0.0);
+        destinationLatLng = new LatLng(0.0, 0.0);
 
         mAgentInfo = findViewById(R.id.agentInfo);
 
         mAgentProfileImage = findViewById(R.id.agentProfileImage);
 
         mAgentName = findViewById(R.id.agentName);
-        mAgentPhone =  findViewById(R.id.agentPhone);
-        mAgentCar =  findViewById(R.id.agentCar);
+        mAgentPhone = findViewById(R.id.agentPhone);
+        mAgentCar = findViewById(R.id.agentCar);
 
         mLogout = findViewById(R.id.logout);
         mRequest = findViewById(R.id.request);
@@ -142,7 +143,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onClick(View v) {
 
-                if (requestBol){
+                if (requestBol) {
 //                    for(Polyline line : polylines){
 //                        line.remove();
 //                    }
@@ -151,8 +152,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     endRide();
 
 
-                }else{
-
+                } else {
 
 
                     requestBol = true;
@@ -164,8 +164,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Customers Location")  .icon(BitmapDescriptorFactory
-                                    .fromResource(R.drawable.customer)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Customers Location").icon(BitmapDescriptorFactory
+                            .fromResource(R.drawable.customer)));
 
                     mRequest.setText("Getting your Agent....");
 
@@ -183,15 +183,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         });
 
 
-
-
     }
+
     private int radius = 1;
     private Boolean agentFound = false;
     private String agentFoundID;
 
     GeoQuery geoQuery;
-    private void getClosestAgent(){
+
+    private void getClosestAgent() {
         DatabaseReference agentLocation = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
 
         GeoFire geoFire = new GeoFire(agentLocation);
@@ -202,38 +202,39 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 Log.e("agentFound", agentFound.toString());
-                if (!agentFound && requestBol){
+                if (!agentFound && requestBol) {
                     DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(key);
                     mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                            if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                                 Map<String, Object> driverMap = (Map<String, Object>) dataSnapshot.getValue();
                                 Log.e("DRIVEMAP", driverMap.toString());
-                                if (agentFound){
+                                if (agentFound) {
                                     return;
                                 }
 
 
-                                    agentFound = true;
-                                    agentFoundID = dataSnapshot.getKey();
+                                agentFound = true;
+                                agentFoundID = dataSnapshot.getKey();
 
-                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
-                                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    HashMap map = new HashMap();
-                                    map.put("customerRideId", customerId);
-                                    map.put("destination", destination);
-                                    map.put("destinationLat", destinationLatLng.latitude);
-                                    map.put("destinationLng", destinationLatLng.longitude);
-                                    driverRef.updateChildren(map);
+                                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
+                                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                HashMap map = new HashMap();
+                                map.put("customerRideId", customerId);
+                                map.put("destination", destination);
+                                map.put("destinationLat", destinationLatLng.latitude);
+                                map.put("destinationLng", destinationLatLng.longitude);
+                                driverRef.updateChildren(map);
 
-                                    getAgentLocation();
-                                    getAgentInfo();
-                                    getHasRideEnded();
-                                    mRequest.setText("Looking for Agents Location....");
-                                }
+                                getAgentLocation();
+                                getAgentInfo();
+                                getHasRideEnded();
+                                mRequest.setText("Looking for Agents Location....");
+                            }
 
                         }
+
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                         }
@@ -253,8 +254,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
             @Override
             public void onGeoQueryReady() {
-                if (!agentFound)
-                {
+                if (!agentFound) {
                     radius++;
                     getClosestAgent();
                 }
@@ -266,6 +266,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             }
         });
     }
+
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getAgentLocation
     |
@@ -282,25 +283,26 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     private Marker mAgentMarker;
     private DatabaseReference agentLocationRef;
     private ValueEventListener agentLocationRefListener;
-    private void getAgentLocation(){
+
+    private void getAgentLocation() {
         agentLocationRef = FirebaseDatabase.getInstance().getReference().child("agentsWorking").child(agentFoundID).child("l");
         agentLocationRefListener = agentLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Log.e("DATASNAPSHOT", dataSnapshot.toString());
-                if(dataSnapshot.exists() && requestBol){
+                if (dataSnapshot.exists() && requestBol) {
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
-                    if(map.get(0) != null){
+                    if (map.get(0) != null) {
                         locationLat = Double.parseDouble(map.get(0).toString());
                     }
-                    if(map.get(1) != null){
+                    if (map.get(1) != null) {
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
-                    LatLng agentLatLng = new LatLng(locationLat,locationLng);
-                    if(mAgentMarker != null){
+                    LatLng agentLatLng = new LatLng(locationLat, locationLng);
+                    if (mAgentMarker != null) {
                         mAgentMarker.remove();
                     }
                     Location loc1 = new Location("");
@@ -320,18 +322,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                                     .fromResource(R.drawable.agent))
                             .snippet("Closest agent"));
                     getRouteToMarker(Agents);
-                    if (distance<100){
+                    if (distance < 100) {
                         mRequest.setText("Agent's Here!!!");
-                    }else{
+                    } else {
                         float finalDistance = distance / 1000;
                         mRequest.setText("Agent Found: " + String.valueOf(finalDistance) + " Km Away");
                     }
 
 
-
-
-
-                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("Your Agent") .icon(BitmapDescriptorFactory
+                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("Your Agent").icon(BitmapDescriptorFactory
                             .fromResource(R.drawable.agent)));
                 }
 
@@ -365,28 +364,29 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     |  Note: --
     |
     *-------------------------------------------------------------------*/
-    private void getAgentInfo(){
+    private void getAgentInfo() {
         mAgentInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID);
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    if(dataSnapshot.child("name")!=null){
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                    if (dataSnapshot.child("name") != null) {
                         mAgentName.setText(dataSnapshot.child("name").getValue().toString());
                     }
-                    if(dataSnapshot.child("phone")!=null){
+                    if (dataSnapshot.child("phone") != null) {
                         mAgentPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
-                    if(dataSnapshot.child("car")!=null){
+                    if (dataSnapshot.child("car") != null) {
                         mAgentCar.setText(dataSnapshot.child("car").getValue().toString());
                     }
-                    if(dataSnapshot.child("profileImageUrl")!=null){
+                    if (dataSnapshot.child("profileImageUrl") != null) {
                         Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mAgentProfileImage);
                     }
 
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -395,14 +395,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
     private DatabaseReference tripHasEndedRef;
     private ValueEventListener tripHasEndedRefListener;
-    private void getHasRideEnded(){
+
+    private void getHasRideEnded() {
         tripHasEndedRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest").child("customerRideId");
         tripHasEndedRefListener = tripHasEndedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
-                }else{
+                } else {
                     if (polylines != null) {
                         erasePolylines();
                     }
@@ -416,7 +417,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         });
     }
 
-    private void endRide(){
+    private void endRide() {
         requestBol = false;
         geoQuery.removeAllListeners();
         if (agentLocationRef != null) {
@@ -424,7 +425,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             tripHasEndedRef.removeEventListener(tripHasEndedRefListener);
         }
 
-        if (agentFoundID != null){
+        if (agentFoundID != null) {
             DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
             agentRef.removeValue();
             agentFoundID = null;
@@ -438,10 +439,10 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
 
-        if(pickupMarker != null){
+        if (pickupMarker != null) {
             pickupMarker.remove();
         }
-        if (mAgentMarker != null){
+        if (mAgentMarker != null) {
             mAgentMarker.remove();
         }
         mRequest.setText("Find an Agent");
@@ -466,8 +467,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
-        mMap.setInfoWindowAdapter(new AgentsCustomInfoWindowAdapter(CustomersMapActivity.this));
-        
+        mMap.setInfoWindowAdapter(new CustomersCustomInfoWindowAdapter(CustomersMapActivity.this));
 
 //        getJSON("http://192.168.1.113/MyApi/Api.php");
         getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
@@ -476,16 +476,12 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
+
     }
 
 
-
-
-
-
-
-
-    protected synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -494,16 +490,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mGoogleApiClient.connect();
 
 
-
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        if(getApplicationContext()!=null){
+        if (getApplicationContext() != null) {
             mLastLocation = location;
 
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 //            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
@@ -543,6 +538,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     |
     *-------------------------------------------------------------------*/
     final int LOCATION_REQUEST_CODE = 1;
+
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case LOCATION_REQUEST_CODE: {
@@ -560,9 +556,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             }
         }
     }
-
-
-
 
 
     //this method is actually fetching the json string
@@ -640,6 +633,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         //creating asynctask object and executing it
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
+
+
     }
 
     private void loadIntoMaps(String json) throws JSONException {
@@ -651,7 +646,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         String[] addresses = new String[addressArray.length()];
         String[] latittudes = new String[addressArray.length()];
         String[] longitutes = new String[addressArray.length()];
-
+        String[] urlString = new String[addressArray.length()];
+        final String finalUrl = urlString.toString();
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
 
@@ -693,6 +689,23 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         }
 
 
+        for (int i = 0; i < addressArray.length(); i++) {
+
+            //getting json object from the json array
+            JSONObject obj = addressArray.getJSONObject(i);
+
+            //getting the address from the json object and putting it inside string array
+            urlString[i] = obj.getString("urlString");
+            final String anotherUrl = urlString[i].toString();
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(anotherUrl));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+
 
 //        JSONArray jsonArray = new JSONArray(json);
         for (int i = 0; i < addressArray.length(); i++) {
@@ -709,18 +722,17 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     ));
 
         }
-
-
     }
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+
     @Override
     public void onRoutingFailure(RouteException e) {
-        if(e != null) {
+        if (e != null) {
             Log.e("NEWERROR", String.valueOf(e));
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -729,10 +741,11 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     public void onRoutingStart() {
 
     }
+
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
-        if(polylines != null)   {
-            if(polylines.size()>0) {
+        if (polylines != null) {
+            if (polylines.size() > 0) {
                 for (Polyline poly : polylines) {
                     poly.remove();
                 }
@@ -741,7 +754,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         polylines = new ArrayList<>();
         //add route(s) to the map.
-        for (int i = 0; i <route.size(); i++) {
+        for (int i = 0; i < route.size(); i++) {
 
             //In case of more than 5 alternative routes
             int colorIndex = i % COLORS.length;
@@ -757,12 +770,14 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         }
 
     }
+
     @Override
     public void onRoutingCancelled() {
 
     }
-    private void erasePolylines(){
-        for(Polyline line : polylines){
+
+    private void erasePolylines() {
+        for (Polyline line : polylines) {
             line.remove();
         }
         polylines.clear();

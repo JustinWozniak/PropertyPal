@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -559,6 +560,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         String[] addresses = new String[addressArray.length()];
         String[] latittudes = new String[addressArray.length()];
         String[] longitutes = new String[addressArray.length()];
+        String[] urlString = new String[addressArray.length()];
 
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
@@ -597,6 +599,25 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
             //getting the address from the json object and putting it inside string array
             longitutes[i] = obj.getString("lng");
+        }
+
+        //looping through all the elements in json array
+        for (int i = 0; i < addressArray.length(); i++) {
+
+            //getting json object from the json array
+            JSONObject obj = addressArray.getJSONObject(i);
+
+            //getting the markerNames from the json object and putting it inside string array
+            urlString[i] = obj.getString("urlString");
+            final String anotherUrl = urlString[i].toString();
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(anotherUrl));
+                    startActivity(browserIntent);
+                }
+            });
+
         }
 
 
