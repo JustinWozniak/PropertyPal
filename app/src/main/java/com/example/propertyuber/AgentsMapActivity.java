@@ -86,6 +86,8 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private LinearLayout mCustomerInfo;
 
+    private LatLng agentsCurrentLocation;
+
     private ImageView mCustomerProfileImage;
 
     private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
@@ -200,6 +202,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     Marker pickupMarker;
+    Marker agentsMarker;
     private DatabaseReference assignedCustomerPickupLocationRef;
     private ValueEventListener assignedCustomerPickupLocationRefListener;
 
@@ -367,7 +370,12 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         mMap.setMyLocationEnabled(true);
 
 
-    }
+        agentsCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        agentsMarker = mMap.addMarker(new MarkerOptions().position(agentsCurrentLocation).title("Agents Location").icon(BitmapDescriptorFactory
+                .fromResource(R.drawable.agent)));
+
+
+        }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -385,6 +393,12 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
             LatLng starter = new LatLng(-23.818045, 136.605767);
             pickupMarker = mMap.addMarker(new MarkerOptions().position(starter).icon(BitmapDescriptorFactory
                     .fromResource(R.drawable.customer)));
+
+            agentsCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            agentsMarker = mMap.addMarker(new MarkerOptions().position(agentsCurrentLocation).title("Agents Location").icon(BitmapDescriptorFactory
+                    .fromResource(R.drawable.agent)));
+
+
             if (!customerId.equals("")) {
 //                rideDistance += mLastLocation.distanceTo(location)/1000;
                 pickupMarker.remove();
