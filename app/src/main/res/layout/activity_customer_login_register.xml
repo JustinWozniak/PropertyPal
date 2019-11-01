@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="189dp"
-        android:layout_height="0dp"
+        android:layout_width="200dp"
+        android:layout_height="250dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
@@ -29,7 +29,7 @@
         android:fontFamily="@font/audiowide"
         android:text="Open Houses"
         android:textColor="@color/colorAccent"
-        android:textSize="42sp"
+        android:textSize="35sp"
         app:layout_constraintBottom_toTopOf="@+id/customerSignup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
         android:fontFamily="@font/audiowide"
         android:text="Sign Up"
         android:textColor="@color/colorAccent"
-        android:textSize="35sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/customerSignIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
         android:fontFamily="@font/audiowide"
         android:text="@string/common_signin_button_text"
         android:textColor="@color/colorAccent"
-        android:textSize="35sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

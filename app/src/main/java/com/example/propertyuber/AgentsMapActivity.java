@@ -269,11 +269,11 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                         destinationLng = Double.valueOf(map.get("destinationLng").toString());
                         destinationLatLng = new LatLng(destinationLat, destinationLng);
                     }
-//                    mMap.addMarker(new MarkerOptions().position(destinationLatLng)
-//                            .title("Agents Location??")
-//                            .icon(BitmapDescriptorFactory
-//                                    .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
-//                            .snippet("Closest agent"));
+                    mMap.addMarker(new MarkerOptions().position(destinationLatLng)
+                            .title("Agents Location??")
+                            .icon(BitmapDescriptorFactory
+                                    .fromResource(R.drawable.agent))
+                            .snippet("Closest agent"));
 
                 }
             }

@@ -11,17 +11,17 @@
 
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="342dp"
-        android:layout_height="251dp"
-        android:layout_marginBottom="20sp"
+        android:layout_width="215dp"
+        android:layout_height="136dp"
         android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="20sp"
         android:src="@mipmap/default_user_foreground" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginBottom="20sp"
         android:text="Tap to upload an image"
         android:textColor="@color/colorPrimaryDark"
@@ -35,7 +35,7 @@
         android:background="@color/colorAccent"
         android:gravity="center"
         android:hint="Name"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/phone"
@@ -46,7 +46,7 @@
         android:gravity="center"
         android:hint="Phone"
         android:inputType="number"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/confirm"
