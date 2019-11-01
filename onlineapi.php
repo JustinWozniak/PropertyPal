@@ -30,7 +30,7 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
  
 //binding results for that statment 
-$stmt->bind_result($id, $name, $address, $lat, $lng, $type, $urlString, $information);
+$stmt->bind_result($id, $name, $address, $lat, $lng, $type, $urlString, $information, $imgUrl);
  
 //looping through all the records
 while($stmt->fetch()){
@@ -44,7 +44,8 @@ while($stmt->fetch()){
         'lng' =>$lng,
         'type' =>$type,
         'urlString' =>$urlString,
-        'information' => $information
+        'information' => $information,
+        'imgUrl' => $imgUrl
 	];
 	
 	//pushing the array inside the addresses array 

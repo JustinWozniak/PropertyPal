@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    sleep(1000);
+                    sleep(4000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

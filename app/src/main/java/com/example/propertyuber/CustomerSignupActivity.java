@@ -37,7 +37,7 @@ public class CustomerSignupActivity extends AppCompatActivity {
     private DatabaseReference customerDatabaseRef;
 
     private String profileImageUrl = "";
-
+    Boolean isSighnedIn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +161,14 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                         .child(user_id)
                                         .child("profileImageUrl");
                                 customerDatabaseRef.setValue(profileImageUrl);
+
+                                customerDatabaseRef = FirebaseDatabase.getInstance()
+                                        .getReference()
+                                        .child("Users")
+                                        .child("Customers")
+                                        .child(user_id)
+                                        .child("signedIn");
+                                customerDatabaseRef.setValue(isSighnedIn);
 
                                 Intent customerIntent = new Intent(CustomerSignupActivity.this, CustomersMapActivity.class);
                                 startActivity(customerIntent);

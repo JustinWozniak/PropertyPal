@@ -75,6 +75,8 @@ public class AgentSigninActivity extends AppCompatActivity {
                                 Toast.makeText(AgentSigninActivity.this, "Agent Sign In Successful", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
+
+
                             } else {
                                 Toast.makeText(AgentSigninActivity.this, "Sign In Unsuccessful, Please Check Email/Password..", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();

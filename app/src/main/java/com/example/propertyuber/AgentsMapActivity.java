@@ -75,12 +75,13 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
     private Switch mWorkingSwitch;
 
     private int status = 0;
-
+    private DatabaseReference mCustomerDatabase;
     private String customerId = "", destination;
     private LatLng destinationLatLng, pickupLatLng;
     private float rideDistance;
 
     private Boolean isLoggingOut = false;
+    private Boolean customerIsOnline = false;
 
     private SupportMapFragment mapFragment;
 
@@ -329,15 +330,19 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         geoFire.removeLocation(customerId);
         customerId = "";
         rideDistance = 0;
+//        Log.e("there",pickupMarker.toString());
 
         if (pickupMarker != null) {
-            pickupMarker.remove();
+         pickupMarker.setVisible(false);
+            Log.e("HERE",pickupMarker.toString());
+
         }
         if (assignedCustomerPickupLocationRefListener != null) {
             assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
 
             for (Polyline line : polylines) {
                 line.remove();
+
             }
             polylines.clear();
         }
@@ -346,6 +351,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerPhone.setText("");
         mCustomerDestination.setText("Destination: --");
         mCustomerProfileImage.setImageResource(R.mipmap.customer);
+
 
     }
 
@@ -373,9 +379,27 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         agentsCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         agentsMarker = mMap.addMarker(new MarkerOptions().position(agentsCurrentLocation).title("Agents Location").icon(BitmapDescriptorFactory
                 .fromResource(R.drawable.agent)));
-
+            drawAllCustomers();
 
         }
+
+    private void drawAllCustomers() {
+
+        DatabaseReference onlineCustomers = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
+        Log.e("Customers", onlineCustomers.toString());
+
+        onlineCustomers = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Users")
+                .child("Customers")
+                .child("signedIn");
+        Log.e("Online",onlineCustomers.toString());
+        String signedInStatus;
+        mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("signedIn");
+         if(mCustomerDatabase.getRoot().toString() == "true"){
+             Log.e("OKd", mCustomerDatabase.toString());
+         }
+    }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)

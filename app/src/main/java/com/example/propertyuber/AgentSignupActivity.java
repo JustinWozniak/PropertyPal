@@ -69,6 +69,7 @@ public class AgentSignupActivity extends AppCompatActivity {
                 String phone = agentPhoneNumber.getText().toString();
                 String pass1 = agentPassword1.getText().toString();
                 String pass2 = agentPassword2.getText().toString();
+                Boolean isSighnedIn = true;
                 String passFinal = pass1;
 
                 if (pass1 != pass2) {

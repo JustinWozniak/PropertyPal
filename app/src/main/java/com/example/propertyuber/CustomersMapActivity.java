@@ -649,6 +649,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         String[] urlString = new String[addressArray.length()];
         final String[] propertyInformation = new String[addressArray.length()];
 
+
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
 
