@@ -99,6 +99,7 @@
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
             </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:background="@android:color/white"
@@ -109,13 +110,24 @@
 
             <Button
                 android:id="@+id/request"
-                android:layout_width="match_parent"
-                android:layout_height="95dp"
+                android:layout_width="384dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/cardview_light_background"
                 android:text="Find an Agent"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/agentProfile"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cardview_light_background"
+                android:text="View Agents Profile"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

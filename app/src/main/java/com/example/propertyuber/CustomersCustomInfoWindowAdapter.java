@@ -181,8 +181,6 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
                             JSONObject obj = imagesArray.getJSONObject(i);
 
                             imagesUrl[i] = obj.getString("imgUrl");
-                            Log.e("URLff", imagesUrl[i]);
-                            Log.e("DSDSDS", String.valueOf(imagesUrl));
                             URL url = new URL(imagesUrl[i]);
                             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 

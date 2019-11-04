@@ -81,7 +81,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button mLogout, mRequest, mSettings;
+    private Button mLogout, mRequest, mSettings, agentsProfile;
 
     private LatLng pickupLocation;
 
@@ -129,7 +129,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mLogout = findViewById(R.id.logout);
         mRequest = findViewById(R.id.request);
         mSettings = findViewById(R.id.settings);
-
+        agentsProfile = findViewById(R.id.agentProfile);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +173,9 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     mRequest.setText("Getting your Agent....");
 
                     getClosestAgent();
+                    if(!getAgentsAroundStarted)
+                        getAgentsAround();
+
                 }
             }
         });
@@ -204,7 +207,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                Log.e("agentFound", agentFound.toString());
                 if (!agentFound && requestBol) {
                     DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(key);
                     mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,7 +214,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                                 Map<String, Object> driverMap = (Map<String, Object>) dataSnapshot.getValue();
-                                Log.e("DRIVEMAP", driverMap.toString());
                                 if (agentFound) {
                                     return;
                                 }
@@ -281,8 +282,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.e("DATASNAPSHOT", dataSnapshot.toString());
                 if (dataSnapshot.exists() && requestBol) {
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
@@ -306,25 +305,38 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     loc2.setLongitude(agentLatLng.longitude);
 
                     float distance = loc1.distanceTo(loc2);
-                    float finalDistance = distance/1000;
+                    float finalDistance = distance / 1000;
 
                     LatLng Agents = new LatLng(agentLatLng.latitude, agentLatLng.longitude);
-                    mMap.addMarker(new MarkerOptions().position(Agents)
-                            .title("Agents Location")
-                            .icon(BitmapDescriptorFactory
-                                    .fromResource(R.drawable.agent))
-                            .snippet("Closest agent"));
-                    getRouteToMarker(Agents);
-                    if (distance < 100) {
-                        mRequest.setText("Agent's Here!!!");
-                    } else {
-                        String newValue = Double.toString(Math.floor(finalDistance));
-                        mRequest.setText("Agent Found: " + newValue + " Km Away");
+
+                    if (agentFound) {
+
+                        mMap.addMarker(new MarkerOptions().position(Agents)
+                                .title("Agents Location")
+                                .icon(BitmapDescriptorFactory
+                                        .fromResource(R.drawable.agent))
+                                .snippet("Closest agent"));
+                        getRouteToMarker(Agents);
+
+                        if (distance < 100) {
+                            mRequest.setText("Agent's Here!!!");
+                        } else {
+                            String newValue = Double.toString(Math.floor(finalDistance));
+                            mRequest.setText("Agent Found: " + newValue + " Km Away");
+                        }
+                        mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("Your Agent").icon(BitmapDescriptorFactory
+                                .fromResource(R.drawable.agent)));
+                        agentsProfile.setVisibility(View.VISIBLE);
+                        agentsProfile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(CustomersMapActivity.this, agentsProfileActivity.class);
+                                startActivity(intent);
+                                return;
+                            }
+                        });
                     }
 
-
-                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentLatLng).title("Your Agent").icon(BitmapDescriptorFactory
-                            .fromResource(R.drawable.agent)));
                 }
 
             }
@@ -337,7 +349,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     }
 
     private void getRouteToMarker(LatLng pickupLatLng) {
-
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
@@ -349,14 +360,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
     }
 
-    /*-------------------------------------------- getAgentInfo -----
-    |  Function(s) getAgentInfo
-    |
-    |  Purpose:  Get all the user information that we can get from the user's database.
-    |
-    |  Note: --
-    |
-    *-------------------------------------------------------------------*/
+
     private void getAgentInfo() {
         mAgentInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID);
@@ -631,24 +635,24 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             JSONObject obj = addressArray.getJSONObject(i);
 
             markerNames[i] = obj.getString("name");
+            Log.e("names", markerNames[i]);
             addresses[i] = obj.getString("address");
             latittudes[i] = obj.getString("lat");
             longitutes[i] = obj.getString("lng");
             propertyInformation[i] = obj.getString("information");
-            Log.e("INFO", propertyInformation[i]);
             urlString[i] = obj.getString("urlString");
 
 
             JSONObject jsonObj = addressArray.getJSONObject(i);
-            double finalLat = Double.valueOf(jsonObj.getString("lat"));
-            double finalLng = Double.valueOf(jsonObj.getString("lng"));
+            final double finalLat = Double.valueOf(jsonObj.getString("lat"));
+            final double finalLng = Double.valueOf(jsonObj.getString("lng"));
             mMap.addMarker(new MarkerOptions()
                     .title(jsonObj.getString("address"))
                     .snippet(propertyInformation[i])
                     .position(new LatLng(finalLat,
                             finalLng)
                     ));
-                Log.e("SNIP",propertyInformation[i]);
+
 
             final String anotherUrl = urlString[i].toString();
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -658,14 +662,13 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     startActivity(browserIntent);
 
                     marker.setSnippet(propertyInformation.toString());
+
                 }
             });
 
         }
-
-
-
     }
+
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
@@ -673,7 +676,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onRoutingFailure(RouteException e) {
         if (e != null) {
-            Log.e("NEWERROR", String.valueOf(e));
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
@@ -724,5 +726,59 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             line.remove();
         }
         polylines.clear();
+    }
+    Boolean getAgentsAroundStarted = false;
+    List<Marker> markerList = new ArrayList<Marker>();
+    private void getAgentsAround()  {
+        getAgentsAroundStarted = true;
+        DatabaseReference allAgentsLocation = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
+        GeoFire geoFire = new GeoFire(allAgentsLocation);
+        GeoQuery geoQuery3 = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 10000);
+        geoQuery3.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+            for(Marker markerIt: markerList)    {
+                if (markerIt.getTag().equals(key))
+                    return;
+                LatLng agentsLocation = new LatLng(location.latitude,location.longitude);
+              Marker mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentsLocation).icon(BitmapDescriptorFactory
+                      .fromResource(R.drawable.agent))
+                      .snippet("Agent"));
+                mAgentMarker.setTag(key);
+              markerList.add(mAgentMarker);
+            }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                for(Marker markerIt: markerList) {
+                    if (markerIt.getTag().equals(key))
+                        markerIt.remove();
+                    markerList.remove(markerIt);
+                    return;
+                }
+                }
+
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for(Marker markerIt: markerList) {
+                    if (markerIt.getTag().equals(key)){
+                    markerIt.setPosition(new LatLng(location.latitude,location.longitude));
+                    }
+                    }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
     }
 }

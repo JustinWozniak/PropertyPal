@@ -6,10 +6,10 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="20sp"
-    tools:context="com.example.propertyuber.AgentSettingsActivity">
+    tools:context=".agentsProfileActivity">
 
     <ImageView
-        android:id="@+id/profileImage"
+        android:id="@+id/agentsProfileImage"
         android:layout_width="215dp"
         android:layout_height="136dp"
         android:layout_gravity="center_vertical|center_horizontal"
@@ -17,7 +17,6 @@
         android:src="@mipmap/default_user_foreground" />
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
@@ -26,8 +25,8 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/name"
+    <TextView
+        android:id="@+id/agentsName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20sp"
@@ -36,8 +35,8 @@
         android:hint="Name"
         android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/car"
+    <TextView
+        android:id="@+id/agentsCar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20sp"
@@ -47,25 +46,13 @@
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/confirm"
-        android:layout_width="200sp"
-        android:layout_height="50sp"
-        android:layout_marginBottom="20sp"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:background="@color/cardview_light_background"
-        android:text="confirm"
-        android:textColor="@color/colorPrimaryDark" />
-
-    <Button
-        android:id="@+id/back"
+        android:id="@+id/agentProfileBack"
         android:layout_width="200sp"
         android:layout_height="50sp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:background="@color/cardview_light_background"
         android:text="back"
         android:textColor="@color/colorPrimaryDark" />
-
-
 
 
 </LinearLayout>
