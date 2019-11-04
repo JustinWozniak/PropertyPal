@@ -26,7 +26,6 @@ public class AgentSignupActivity extends AppCompatActivity {
     private EditText agentName;
     private EditText agentEmail;
     private EditText agentCar;
-    private EditText agentPhoneNumber;
     private EditText agentPassword1;
     private EditText agentPassword2;
 
@@ -50,7 +49,6 @@ public class AgentSignupActivity extends AppCompatActivity {
         agentName = findViewById(R.id.agentName);
         agentEmail = findViewById(R.id.agentEmail);
         agentCar = findViewById(R.id.agentVehicle);
-        agentPhoneNumber = findViewById(R.id.agentPhone);
         agentPassword1 = findViewById(R.id.agentPassword1);
         agentPassword2 = findViewById(R.id.agentPassword2);
         agentSubmitSignup = findViewById(R.id.agentSubmitSignupButton);
@@ -66,7 +64,6 @@ public class AgentSignupActivity extends AppCompatActivity {
                 String name = agentName.getText().toString();
                 String email = agentEmail.getText().toString();
                 String car = agentCar.getText().toString();
-                String phone = agentPhoneNumber.getText().toString();
                 String pass1 = agentPassword1.getText().toString();
                 String pass2 = agentPassword2.getText().toString();
                 Boolean isSighnedIn = true;
@@ -76,13 +73,13 @@ public class AgentSignupActivity extends AppCompatActivity {
                     passFinal = "NOPE";
                 }
 
-                signupCustomer(name, email, car, phone, pass1, pass2, passFinal);
+                signupCustomer(name, email, car, pass1, pass2, passFinal);
             }
         });
     }
 
 
-    private void signupCustomer(final String name, final String email, final String car, final String phone, final String pass1, String pass2, String passFinal) {
+    private void signupCustomer(final String name, final String email, final String car, final String pass1, String pass2, String passFinal) {
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "Please enter your full name", Toast.LENGTH_SHORT).show();
@@ -96,10 +93,6 @@ public class AgentSignupActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(car)) {
             Toast.makeText(this, "Please enter type of vehicle", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(pass1)) {
@@ -148,14 +141,6 @@ public class AgentSignupActivity extends AppCompatActivity {
                                         .child(user_id)
                                         .child("car");
                                 agentDatabaseRef.setValue(car);
-
-                                agentDatabaseRef = FirebaseDatabase.getInstance()
-                                        .getReference()
-                                        .child("Users")
-                                        .child("Agents")
-                                        .child(user_id)
-                                        .child("phone");
-                                agentDatabaseRef.setValue(phone);
 
                                 agentDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()

@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class AgentSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCarField;
+    private EditText mNameField, mCarField;
 
     private Button mBack, mConfirm;
 
@@ -48,7 +48,6 @@ public class AgentSettingsActivity extends AppCompatActivity {
 
     private String userID;
     private String mName;
-    private String mPhone;
     private String mCar;
     private String mService;
     private String mProfileImageUrl;
@@ -65,7 +64,6 @@ public class AgentSettingsActivity extends AppCompatActivity {
 
 
         mNameField = findViewById(R.id.name);
-        mPhoneField = findViewById(R.id.phone);
         mCarField = findViewById(R.id.car);
 
         mProfileImage = findViewById(R.id.profileImage);
@@ -115,10 +113,6 @@ public class AgentSettingsActivity extends AppCompatActivity {
                         mName = map.get("name").toString();
                         mNameField.setText(mName);
                     }
-                    if(map.get("phone")!=null){
-                        mPhone = map.get("phone").toString();
-                        mPhoneField.setText(mPhone);
-                    }
                     if(map.get("car")!=null){
                         mCar = map.get("car").toString();
                         mCarField.setText(mCar);
@@ -144,18 +138,10 @@ public class AgentSettingsActivity extends AppCompatActivity {
 
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
-        mPhone = mPhoneField.getText().toString();
         mCar = mCarField.getText().toString();
-
-
-
-
-
-
 
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
-        userInfo.put("phone", mPhone);
         userInfo.put("car", mCar);
 
         mAgentsDatabase.updateChildren(userInfo);

@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class CustomerSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField;
+    private EditText mNameField;
 
     private Button mBack, mConfirm;
 
@@ -46,7 +46,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
     private String userID;
     private String mName;
-    private String mPhone;
     private String mProfileImageUrl;
 
     private Uri resultUri;
@@ -58,7 +57,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_customer_settings);
 
         mNameField = findViewById(R.id.name);
-        mPhoneField = findViewById(R.id.phone);
 
         mProfileImage =  findViewById(R.id.profileImage);
 
@@ -105,10 +103,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         mName = map.get("name").toString();
                         mNameField.setText(mName);
                     }
-                    if(map.get("phone")!=null){
-                        mPhone = map.get("phone").toString();
-                        mPhoneField.setText(mPhone);
-                    }
                     if(map.get("profileImageUrl")!=null){
                         mProfileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
@@ -126,11 +120,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
-        mPhone = mPhoneField.getText().toString();
-
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
-        userInfo.put("phone", mPhone);
         mCustomerDatabase.updateChildren(userInfo);
 
         if(resultUri != null) {

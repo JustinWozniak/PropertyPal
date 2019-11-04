@@ -59,7 +59,6 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
         String snippet = marker.getSnippet();
         TextView tvTitle = view.findViewById(R.id.title);
         openHouseImage1 = view.findViewById(R.id.customersCustomWindowImage1);
-//        openHouseImage1.setImageResource(R.drawable.pplogo);
         informationText = view.findViewById(R.id.customersOpenHouseInformation);
         openHouseAddress = view.findViewById(R.id.customersAddressOpenHouse);
         openHouseAddress.setText(title);
@@ -67,11 +66,9 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
         informationText.setText(snippet);
         getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
 
-
     }
 
     private void getInfoWindowImage() {
-
     }
 
     @Override
@@ -85,7 +82,6 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
         renderWindowText(marker, mWindow);
         return mWindow;
     }
-
 
     private void getJSON(final String urlWebService) {
         /*
@@ -164,19 +160,7 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
 
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
     private void getImgUrl(String json) throws JSONException, IOException {
         //creating a json array from the json string
@@ -185,17 +169,13 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
         //creating a string array for listview
         final String[] imagesUrl = new String[imagesArray.length()];
 
-
-        //looping through all the elements in json array
-
+        //looping through all the elements in json array to find image urls
 
             final Thread thread = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
                     try  {
-
-
                         for (int i = 0; i < imagesArray.length(); i++) {
 
                             JSONObject obj = imagesArray.getJSONObject(i);
@@ -221,17 +201,7 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
             });
 
             thread.start();
-
-
-
-
-
-
-
                 }
-
-
-
 
     private Context getApplication() {
             throw new RuntimeException("Stub!");

@@ -24,7 +24,6 @@ public class CustomerSignupActivity extends AppCompatActivity {
     private EditText customerName;
     private EditText customerEmail;
     private EditText customerCar;
-    private EditText customerPhoneNumber;
     private EditText customerPassword1;
     private EditText customerPassword2;
 
@@ -47,7 +46,6 @@ public class CustomerSignupActivity extends AppCompatActivity {
         customerName = findViewById(R.id.customerName);
         customerEmail = findViewById(R.id.customerEmail);
         customerCar = findViewById(R.id.customerVehicle);
-        customerPhoneNumber = findViewById(R.id.customerPhone);
         customerPassword1 = findViewById(R.id.customerPassword1);
         customerPassword2 = findViewById(R.id.customerPassword2);
         customerSubmitSignup = findViewById(R.id.customerSubmitSignupButton);
@@ -63,17 +61,16 @@ public class CustomerSignupActivity extends AppCompatActivity {
                 String name = customerName.getText().toString();
                 String email = customerEmail.getText().toString();
                 String car = customerCar.getText().toString();
-                String phone = customerPhoneNumber.getText().toString();
                 String pass1 = customerPassword1.getText().toString();
                 String pass2 = customerPassword2.getText().toString();
 
-                signupCustomer(name, email, car, phone, pass1, pass2);
+                signupCustomer(name, email, car, pass1, pass2);
             }
         });
     }
 
 
-    private void signupCustomer(final String name, final String email, final String car, final String phone, final String pass1, String pass2) {
+    private void signupCustomer(final String name, final String email, final String car, final String pass1, String pass2) {
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "Please enter your full name", Toast.LENGTH_SHORT).show();
@@ -87,10 +84,6 @@ public class CustomerSignupActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(car)) {
             Toast.makeText(this, "Please enter type of vehicle", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(pass1)) {
@@ -137,14 +130,6 @@ public class CustomerSignupActivity extends AppCompatActivity {
                                         .child(user_id)
                                         .child("car");
                                 customerDatabaseRef.setValue(car);
-
-                                customerDatabaseRef = FirebaseDatabase.getInstance()
-                                        .getReference()
-                                        .child("Users")
-                                        .child("Customers")
-                                        .child(user_id)
-                                        .child("phone");
-                                customerDatabaseRef.setValue(phone);
 
                                 customerDatabaseRef = FirebaseDatabase.getInstance()
                                         .getReference()

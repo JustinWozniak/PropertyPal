@@ -34,7 +34,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
     private TextView addressText;
 
 
-
     public AgentsCustomInfoWindowAdapter(Context context) {
         mContext = context;
         mWindow = LayoutInflater.from(context).inflate(R.layout.agents_custom_layout_window, null);
@@ -56,9 +55,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
 
 
-
-
-
     }
 
     @Override
@@ -72,7 +68,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         renderWindowText(marker, mWindow);
         return mWindow;
     }
-
 
 
     private void getJSON(final String urlWebService) {
@@ -156,16 +151,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
     }
 
 
-
-
-
-
-
-
-
-
-
-
     private void getImgUrl(String json) throws JSONException, IOException {
         //creating a json array from the json string
         final JSONArray imagesArray = new JSONArray(json);
@@ -181,7 +166,7 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
             @Override
             public void run() {
-                try  {
+                try {
 
 
                     for (int i = 0; i < imagesArray.length(); i++) {
@@ -189,8 +174,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
                         JSONObject obj = imagesArray.getJSONObject(i);
 
                         imagesUrl[i] = obj.getString("imgUrl");
-                        Log.e("URLff", imagesUrl[i]);
-                        Log.e("DSDSDS", String.valueOf(imagesUrl));
                         URL url = new URL(imagesUrl[i]);
                         Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
@@ -199,6 +182,7 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
                         } else {
                             openHouseImage1.setImageBitmap(bmp);
                         }
+
                     }
 
 
@@ -211,18 +195,11 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         thread.start();
 
 
-
-
-
-
-
     }
 
 
-
-
     private Context getApplication() {
-        throw new RuntimeException("Stub!");
+        throw new RuntimeException("error!");
     }
 }
 

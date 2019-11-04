@@ -95,12 +95,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/agentPhone"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/agentCar"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>

@@ -91,7 +91,7 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private ImageView mCustomerProfileImage;
 
-    private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
+    private TextView mCustomerName, mCustomerDestination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,6 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerProfileImage = findViewById(R.id.customerProfileImage);
 
         mCustomerName = findViewById(R.id.customerName);
-        mCustomerPhone = findViewById(R.id.customerPhone);
         mCustomerDestination = findViewById(R.id.customerDestination);
 
         mWorkingSwitch = findViewById(R.id.workingSwitch);
@@ -300,9 +299,6 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
                     if (map.get("name") != null) {
                         mCustomerName.setText(map.get("name").toString());
                     }
-                    if (map.get("phone") != null) {
-                        mCustomerPhone.setText(map.get("phone").toString());
-                    }
                     if (map.get("profileImageUrl") != null) {
                         Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
                     }
@@ -348,7 +344,6 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         }
         mCustomerInfo.setVisibility(View.GONE);
         mCustomerName.setText("");
-        mCustomerPhone.setText("");
         mCustomerDestination.setText("Destination: --");
         mCustomerProfileImage.setImageResource(R.mipmap.customer);
 

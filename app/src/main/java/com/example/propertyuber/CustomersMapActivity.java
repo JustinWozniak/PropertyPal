@@ -2,14 +2,18 @@ package com.example.propertyuber;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -96,7 +100,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
     private ImageView mAgentProfileImage;
 
-    private TextView mAgentName, mAgentPhone, mAgentCar;
+    private TextView mAgentName, mAgentCar;
     private RatingBar mRatingBar;
 
     @Override
@@ -120,7 +124,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         mAgentProfileImage = findViewById(R.id.agentProfileImage);
 
         mAgentName = findViewById(R.id.agentName);
-        mAgentPhone = findViewById(R.id.agentPhone);
         mAgentCar = findViewById(R.id.agentCar);
 
         mLogout = findViewById(R.id.logout);
@@ -267,19 +270,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         });
     }
 
-    /*-------------------------------------------- Map specific functions -----
-    |  Function(s) getAgentLocation
-    |
-    |  Purpose:  Get's most updated agent location and it's always checking for movements.
-    |
-    |  Note:
-    |	   Even tho we used geofire to push the location of the agent we can use a normal
-    |      Listener to get it's location with no problem.
-    |
-    |      0 -> Latitude
-    |      1 -> Longitudde
-    |
-    *-------------------------------------------------------------------*/
     private Marker mAgentMarker;
     private DatabaseReference agentLocationRef;
     private ValueEventListener agentLocationRefListener;
@@ -287,6 +277,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     private void getAgentLocation() {
         agentLocationRef = FirebaseDatabase.getInstance().getReference().child("agentsWorking").child(agentFoundID).child("l");
         agentLocationRefListener = agentLocationRef.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -314,6 +306,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     loc2.setLongitude(agentLatLng.longitude);
 
                     float distance = loc1.distanceTo(loc2);
+                    float finalDistance = distance/1000;
 
                     LatLng Agents = new LatLng(agentLatLng.latitude, agentLatLng.longitude);
                     mMap.addMarker(new MarkerOptions().position(Agents)
@@ -325,8 +318,8 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                     if (distance < 100) {
                         mRequest.setText("Agent's Here!!!");
                     } else {
-                        float finalDistance = distance / 1000;
-                        mRequest.setText("Agent Found: " + String.valueOf(finalDistance) + " Km Away");
+                        String newValue = Double.toString(Math.floor(finalDistance));
+                        mRequest.setText("Agent Found: " + newValue + " Km Away");
                     }
 
 
@@ -373,9 +366,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                     if (dataSnapshot.child("name") != null) {
                         mAgentName.setText(dataSnapshot.child("name").getValue().toString());
-                    }
-                    if (dataSnapshot.child("phone") != null) {
-                        mAgentPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
                     if (dataSnapshot.child("car") != null) {
                         mAgentCar.setText(dataSnapshot.child("car").getValue().toString());
@@ -449,7 +439,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         mAgentInfo.setVisibility(View.GONE);
         mAgentName.setText("");
-        mAgentPhone.setText("");
         mAgentCar.setText("Destination: --");
         mAgentProfileImage.setImageResource(R.mipmap.customer);
         if (mAgentMarker != null) {
@@ -526,17 +515,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-
-    /*-------------------------------------------- onRequestPermissionsResult -----
-    |  Function onRequestPermissionsResult
-    |
-    |  Purpose:  Get permissions for our app if they didn't previously exist.
-    |
-    |  Note:
-    |	requestCode: the nubmer assigned to the request that we've made. Each
-    |                request has it's own unique request code.
-    |
-    *-------------------------------------------------------------------*/
     final int LOCATION_REQUEST_CODE = 1;
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -545,9 +523,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     mapFragment.getMapAsync(this);
-
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Please provide the permission", Toast.LENGTH_LONG).show();
@@ -556,7 +532,6 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             }
         }
     }
-
 
     //this method is actually fetching the json string
     private void getJSON(final String urlWebService) {
