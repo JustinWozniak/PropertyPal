@@ -30,6 +30,8 @@ import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -374,27 +376,10 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
         agentsCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         agentsMarker = mMap.addMarker(new MarkerOptions().position(agentsCurrentLocation).title("Agents Location").icon(BitmapDescriptorFactory
                 .fromResource(R.drawable.agent)));
-            drawAllCustomers();
+        getCustomersAround();
 
         }
 
-    private void drawAllCustomers() {
-
-        DatabaseReference onlineCustomers = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
-        Log.e("Customers", onlineCustomers.toString());
-
-        onlineCustomers = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Users")
-                .child("Customers")
-                .child("signedIn");
-        Log.e("Online",onlineCustomers.toString());
-        String signedInStatus;
-        mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("signedIn");
-         if(mCustomerDatabase.getRoot().toString() == "true"){
-             Log.e("OKd", mCustomerDatabase.toString());
-         }
-    }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -688,5 +673,71 @@ public class AgentsMapActivity extends FragmentActivity implements OnMapReadyCal
             line.remove();
         }
         polylines.clear();
+    }
+
+
+    List<Marker> markers = new ArrayList<Marker>();
+    private void getCustomersAround(){
+        Toast.makeText(getApplicationContext(), "getCustomersAround", Toast.LENGTH_LONG).show();
+
+        DatabaseReference customersAvailable = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
+
+        GeoFire geoFire = new GeoFire(customersAvailable);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLongitude(), mLastLocation.getLatitude()), 99999);
+
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                Toast.makeText(getApplicationContext(), "onKeyEntered", Toast.LENGTH_LONG).show();
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key))
+                        return;
+                }
+
+                LatLng customersLocation = new LatLng(location.latitude, location.longitude);
+
+                Marker mCustomersMarker2 = mMap.addMarker(new MarkerOptions().position(customersLocation).title(key).icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.customer)));
+                mCustomersMarker2.setTag(key);
+
+                markers.add(mCustomersMarker2);
+
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                Toast.makeText(getApplicationContext(), "onKeyExited", Toast.LENGTH_LONG).show();
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
+                        markerIt.remove();
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                Toast.makeText(getApplicationContext(), "onKeyMoved", Toast.LENGTH_LONG).show();
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
+                        markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                Toast.makeText(getApplicationContext(), "onGeoQueryReady", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "onGeoQueryError", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

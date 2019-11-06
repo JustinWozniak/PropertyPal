@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -9,29 +10,29 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="380dp"
-        android:layout_height="137dp"
+        android:layout_width="378dp"
+        android:layout_height="204dp"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="147dp"
-        android:layout_marginLeft="147dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="152dp"
-        android:layout_marginRight="152dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Open House!"
-        android:textColor="#000"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/agentAddressOpenHouse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="147dp"
+            android:layout_marginLeft="147dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="152dp"
+            android:layout_marginRight="152dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Open House!"
+            android:textColor="#000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/agentAddressOpenHouse"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/customersCustomWindowImage1"
@@ -47,11 +48,12 @@
             app:layout_constraintEnd_toStartOf="@+id/customersOpenHouseButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/customersAddressOpenHouse"
+            app:layout_constraintVertical_bias="0.298"
             app:srcCompat="@drawable/pplogo" />
 
         <Button
             android:id="@+id/customersOpenHouseButton"
-            android:layout_width="237dp"
+            android:layout_width="250dp"
             android:layout_height="20dp"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
@@ -65,30 +67,32 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/customersCustomWindowImage1"
-            app:layout_constraintTop_toBottomOf="@+id/customersOpenHouseInformation" />
+            app:layout_constraintTop_toBottomOf="@+id/customersOpenHouseInformation"
+            app:layout_constraintVertical_bias="0.906" />
 
-            <TextView
-                android:id="@+id/customersOpenHouseInformation"
-                android:layout_width="237dp"
-                android:layout_height="51dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginRight="34dp"
-                android:layout_marginBottom="7dp"
-                android:gravity="center"
-                android:text="Default Text"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/agentsOpenHouseButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/customersCustomWindowImage1"
-                app:layout_constraintTop_toBottomOf="@+id/customersAddressOpenHouse" />
+        <TextView
+            android:id="@+id/customersOpenHouseInformation"
+            android:layout_width="262dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginRight="34dp"
+            android:layout_marginBottom="7dp"
+            android:gravity="center"
+            android:text="Default Text"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/agentsOpenHouseButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/customersCustomWindowImage1"
+            app:layout_constraintTop_toBottomOf="@+id/customersAddressOpenHouse" />
 
         <TextView
             android:id="@+id/customersAddressOpenHouse"
-            android:layout_width="340dp"
-            android:layout_height="22dp"
+            android:layout_width="334dp"
+            android:layout_height="28dp"
             android:layout_marginStart="21dp"
             android:layout_marginLeft="21dp"
             android:layout_marginEnd="19dp"

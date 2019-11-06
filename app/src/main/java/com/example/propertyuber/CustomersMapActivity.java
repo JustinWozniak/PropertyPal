@@ -32,6 +32,7 @@ import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -211,7 +212,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                                Map<String, Object> driverMap = (Map<String, Object>) dataSnapshot.getValue();
+                                Map<String, Object> agentMap = (Map<String, Object>) dataSnapshot.getValue();
                                 if (agentFound) {
                                     return;
                                 }
@@ -220,14 +221,14 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                                 agentFound = true;
                                 agentFoundID = dataSnapshot.getKey();
 
-                                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
+                                DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
                                 String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 HashMap map = new HashMap();
                                 map.put("customerRideId", customerId);
                                 map.put("destination", destination);
                                 map.put("destinationLat", destinationLatLng.latitude);
                                 map.put("destinationLng", destinationLatLng.longitude);
-                                driverRef.updateChildren(map);
+                                agentRef.updateChildren(map);
 
                                 getAgentLocation();
                                 getAgentInfo();
@@ -389,6 +390,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     private ValueEventListener tripHasEndedRefListener;
 
     private void getHasRideEnded() {
+
         tripHasEndedRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest").child("customerRideId");
         tripHasEndedRefListener = tripHasEndedRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -410,6 +412,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     }
 
     private void endRide() {
+        agentsProfile.setVisibility(View.GONE);
         requestBol = false;
         geoQuery.removeAllListeners();
         if (agentLocationRef != null) {
@@ -727,57 +730,53 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     }
 
 
-    List<Marker> markerList = new ArrayList<Marker>();
-
-    private void getAgentsAround() {
+    List<Marker> markers = new ArrayList<Marker>();
+    private void getAgentsAround(){
         Toast.makeText(getApplicationContext(), "getAgentsAround", Toast.LENGTH_LONG).show();
 
-        DatabaseReference agentsLocation = FirebaseDatabase.getInstance().getReference().child("Users").child("agentsAvailable");
+        DatabaseReference agentsAvailable = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
 
-        GeoFire geoFire = new GeoFire(agentsLocation);
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLongitude(), mLastLocation.getLatitude()), 999999);
-        Log.e("getLongitude", String.valueOf(mLastLocation.getLongitude()));
-        Log.e("getLatitude", String.valueOf(mLastLocation.getLatitude()));
-        Log.e("geoQuery", String.valueOf(geoQuery));
+        GeoFire geoFire = new GeoFire(agentsAvailable);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLongitude(), mLastLocation.getLatitude()), 99999);
 
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                Toast.makeText(getApplicationContext(), "onKeyEntered" + key, Toast.LENGTH_LONG).show();
-                for (Marker markerIt : markerList) {
-                    if (markerIt.getTag().equals(key)) {
+                Toast.makeText(getApplicationContext(), "onKeyEntered", Toast.LENGTH_LONG).show();
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key))
                         return;
-                    }
-
-                    LatLng agentsLocation = new LatLng(location.latitude, location.longitude);
-                    Marker mAgentMarker = mMap.addMarker(new MarkerOptions().position(agentsLocation).icon(BitmapDescriptorFactory
-                            .fromResource(R.drawable.agent))
-                            .snippet("Agent"));
-                    mAgentMarker.setTag(key);
-                    markerList.add(mAgentMarker);
-
                 }
+
+                LatLng agentsLocation = new LatLng(location.latitude, location.longitude);
+
+                Marker mAgentMarker2 = mMap.addMarker(new MarkerOptions().position(agentsLocation).title(key).icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.agent)));
+                mAgentMarker2.setTag(key);
+
+                markers.add(mAgentMarker2);
+
+
             }
 
             @Override
             public void onKeyExited(String key) {
-                Toast.makeText(getApplicationContext(), "onKeyExited" + key, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "onKeyExited", Toast.LENGTH_LONG).show();
 
-                for (Marker markerIt : markerList) {
-                    if (markerIt.getTag().equals(key))
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
                         markerIt.remove();
-                    markerList.remove(markerIt);
-                    return;
+                    }
                 }
             }
 
-
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
-                Toast.makeText(getApplicationContext(), "onKeyMoved" + key, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "onKeyMoved", Toast.LENGTH_LONG).show();
 
-                for (Marker markerIt : markerList) {
-                    if (markerIt.getTag().equals(key)) {
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
                         markerIt.setPosition(new LatLng(location.latitude, location.longitude));
                     }
                 }
@@ -786,15 +785,13 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onGeoQueryReady() {
                 Toast.makeText(getApplicationContext(), "onGeoQueryReady", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(), "radius" + radius, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onGeoQueryError(DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "onGeoQueryError" + error, Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(), "onGeoQueryError", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 }
